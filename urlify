@@ -1,0 +1,23 @@
+#!/usr/bin/perl
+
+# Reads from the first argument. Encodes what it reads to base64, then
+# URL-escapes all characters that have to be URL-escaped, then prints to
+# STDOUT.
+
+use 5.010;
+use warnings;
+use strict;
+
+use MIME::Base64;
+use Perl6::Slurp;
+use URI::Escape;
+
+my $binary = slurp '<:raw', $ARGV[0];
+my $encoded = encode_base64($binary);
+
+my $url = "https://img.shields.io/badge/reviewers-wanted-lightgrey.svg"
+          . "?logo=" . uri_escape("data:image/png;base64,$encoded")
+          . "";
+
+print qq{<a href="$url">badge</a>\n};
+
